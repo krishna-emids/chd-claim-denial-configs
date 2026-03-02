@@ -80,7 +80,9 @@ STEP 5: PREPARE FOR EXTERNAL SCORING
 DO NOT calculate a final denial risk percentage or assign a risk tier. Your sole job is to identify the features and map the findings. The external Python math engine will calculate the final score based on your feature outputs.
 
 ## OUTPUT FORMAT (JSON ONLY - STRICT SCHEMA)
-You must output valid JSON exactly matching this structure. Do not add or change keys. Set values to null if no violation is found.
+You must output valid JSON exactly matching this structure. Do not add or change keys. 
+For feature_values, use 1.0 for a Pass and 0.0 for a Fail. Use false for flags unless a violation is explicitly found. NEVER use null for numeric scores or flags.
+
 {
   "claim_id": "<id>",
   "denial_risk_percent": null,
@@ -97,7 +99,7 @@ You must output valid JSON exactly matching this structure. Do not add or change
     }
   ],
   "feature_values": {
-    "dx_proc_compat_score": null,
+    "dx_proc_compat_score": 1.0,
     "ncci_conflict_count": 0,
     "mue_violation_flag": false,
     "auth_required_flag": false,
@@ -110,17 +112,11 @@ You must output valid JSON exactly matching this structure. Do not add or change
     "revenue_code_cpt_match_flag": true
   },
   "suggested_fixes": [
-    "Provide specific text action item"
+    "Provide specific action item"
   ],
   "appeal_templates": [],
-  "citations": [
-    {
-      "doc_id": "Example_ID",
-      "title": "Example Title",
-      "url": "https://example.com"
-    }
-  ],
-  "confidence_score": null,
+  "citations": [],
+  "confidence_score": 0.95,
   "confidence_justification": {
     "missing_data": []
   }
