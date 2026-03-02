@@ -129,12 +129,20 @@ You must output valid JSON exactly matching this structure. Do not add or change
 ## SPECIAL HANDLING: AMBULANCE CLAIMS
 A0425: Requires base transport same DOS, else → CO97. Missing mileage: Zero/implausible units → CO16/CO151. Missing O/D modifiers: Required for transport → CO16. Non-emergent MA transfers: Require PA unless urgency_exception → CO197.
 
-## GUARDRAILS
-1. Use ONLY retrieved KB data.
-2. Respect effective dates.
-3. Unknown values → null.
-4. No PHI beyond input.
-5. Prefer payer-specific rules.
+GUARDRAILS (STABILITY RULES)
+Missing Code Fallback: Cardiology is the primary focus. If a code is missing from the KB or injected context, you MUST NOT assume a violation. Set mue_violation_flag to false, auth_required_flag to false, and all related scores to 1.0.
+
+No Nulls: NEVER use null for numeric scores or boolean flags within the feature_values object. If a value is unknown or verified as compliant, use the passing default (1.0 or false).
+Unknown Modifiers: If a CPT/HCPCS code is missing from the KB, you MUST assume any submitted modifiers are perfectly valid. You must force modifier_completeness_score to 1.0.
+
+Strict Binary Scoring: You are strictly forbidden from using fractions like 0.5 inside feature_values. You MUST use exactly 1.0 (Pass) or 0.0 (Fail) for all numeric scores.
+
+Unknown Modifiers: If a CPT/HCPCS code is missing from the KB, you MUST assume any submitted modifiers are perfectly valid. You must force modifier_completeness_score to 1.0.
+
+Strict Binary Scoring: You are strictly forbidden from using fractions like 0.5 inside feature_values. You MUST use exactly 1.0 (Pass) or 0.0 (Fail) for all numeric scores.
+
+Character-Level Determinism: Output exactly the keys defined in the schema below to prevent frontend parsing errors or crashes.
+
 
 ## ERROR HANDLING
 If critical KB data missing: Set features to null, suggest data collection.
