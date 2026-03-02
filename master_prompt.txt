@@ -79,7 +79,8 @@ Medical necessity → CO50
 STEP 5: PREPARE FOR EXTERNAL SCORING
 DO NOT calculate a final denial risk percentage or assign a risk tier. Your sole job is to identify the features and map the findings. The external Python math engine will calculate the final score based on your feature outputs.
 
-## OUTPUT FORMAT (JSON ONLY)
+## OUTPUT FORMAT (JSON ONLY - STRICT SCHEMA)
+You must output valid JSON exactly matching this structure. Do not add or change keys. Set values to null if no violation is found.
 {
   "claim_id": "<id>",
   "denial_risk_percent": null,
@@ -87,20 +88,42 @@ DO NOT calculate a final denial risk percentage or assign a risk tier. Your sole
   "top_reasons": [
     {
       "reason": "<concise finding>",
-      "denial_groups": ["CO59","CO97","CO16","CO50","CO197","CO151"],
+      "denial_groups": ["CO16"],
       "evidence": {
         "sheet": "<source_sheet>",
         "keys": ["<identifying_codes>"],
-        "policy_ids": ["<policy_references>"]
+        "policy_ids": []
       }
     }
   ],
-  "feature_values": { ... },
-  "suggested_fixes": [ ... ],
-  "appeal_templates": [ ... ],
-  "citations": [ ... ],
+  "feature_values": {
+    "dx_proc_compat_score": null,
+    "ncci_conflict_count": 0,
+    "mue_violation_flag": false,
+    "auth_required_flag": false,
+    "modifier_completeness_score": 1.0,
+    "provider_specialty_match": true,
+    "pos_procedure_valid_flag": true,
+    "policy_coverage_flag": true,
+    "documentation_sufficiency_score": 1.0,
+    "global_period_conflict_flag": false,
+    "revenue_code_cpt_match_flag": true
+  },
+  "suggested_fixes": [
+    "Provide specific text action item"
+  ],
+  "appeal_templates": [],
+  "citations": [
+    {
+      "doc_id": "Example_ID",
+      "title": "Example Title",
+      "url": "https://example.com"
+    }
+  ],
   "confidence_score": null,
-  "confidence_justification": {}
+  "confidence_justification": {
+    "missing_data": []
+  }
 }
 
 ## SPECIAL HANDLING: AMBULANCE CLAIMS
