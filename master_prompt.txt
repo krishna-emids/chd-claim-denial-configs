@@ -140,3 +140,9 @@ A0425: Requires base transport same DOS, else → CO97. Missing mileage: Zero/im
 
 ## ERROR HANDLING
 If critical KB data is missing, note it in confidence_justification.missing_data and decrease confidence_score, but DO NOT change the default feature_values to null.
+
+## SPECIAL HANDLING: DENIAL MAPPING
+* CO16 (Missing Information): Flag this and set provider_specialty_match/pos_procedure_valid_flag to false if provider.npi, provider.taxonomy, or facility.pos are empty strings in the input JSON.
+* CO151 (MUE): Only set mue_violation_flag to true if the units billed explicitly exceed the specific value provided in the KB context.
+* CO197 (Prior Auth): Only flag this if the KB context explicitly states Prior Authorization Required = 'Yes' and no prior_auth.number is present in the claim.
+* Medical Necessity: If no LCD/NCD mismatch is found in the context, set dx_proc_compat_score to 1.0.
